@@ -1,3 +1,4 @@
+Simple Spring Boot REST HATEOAS API written in Kotlin (except one Java file), for demonstration purposes.
 
 API can be accessed live at: 
 
