@@ -1,17 +1,18 @@
 Simple Spring Boot REST HATEOAS API written in Kotlin (except one Java file), for demonstration purposes.
 
-This demonstrates:
+This application stores the dates when a listener last listened to [mixes by DJ Zyron](http://zyron.c64.org/mixes.php).  It also stores the URIs of [associated list data at Discogs](https://www.discogs.com/user/Zyron/lists?page=1&limit=100&header=1).
 
+This API is [live at Amazon Web Services](http://jsbr.us-west-2.elasticbeanstalk.com).  Most areas are restricted to authenticated users only.
+
+Restricted areas can be accessed using basic authentication:
+* username: guest
+* password: guest
+
+This repository demonstrates:
+
+* use of Spring Boot
 * implementation of a RESTful HATEOAS HAL API
 * hashing and authentication of passwords with BCrypt
-* restricting access to authenticated clients (only GET requests on root URL and mixes subdirectory are permitted without authentication)
+* restricting access to authenticated users (only GET requests on root URL and mixes subdirectory are permitted without authentication)
 * validation of input
-
-API can be accessed live at: 
-
-http://jsbr.us-west-2.elasticbeanstalk.com
-
-Based on DJ Zyron mixes, it just enables a user to keep track of the last time they listened to a particular mix.
-
-http://zyron.c64.org
-https://www.discogs.com/user/Zyron/lists
+* use of new programming language (Kotlin)
