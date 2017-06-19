@@ -13,7 +13,8 @@ values ('http://api.discogs.com/lists/334571', 'http://www.discogs.com/lists/140
 (null, null, 'DJ Zyron Live on ISFM 2016-09-03', '2016-09-03', null),
 ('http://api.discogs.com/lists/144332', 'https://www.discogs.com/lists/110219-Zyron-Live-on-ISFM/144332', 'Zyron Saturday Stream', '2011-02-19', null),
 ('http://api.discogs.com/lists/143593', 'https://www.discogs.com/lists/111119-Zyron-Live-on-ISFM/143593', 'Zyron Saturday Stream', '2011-02-19', 'An Interstate FM live stream'),
-(null, null, 'DJ Zyron Live on ISFM 2011-04-23', '2011-04-23', 'An Interstate FM live stream');
+(null, null, 'DJ Zyron Live on ISFM 2011-04-23', '2011-04-23', 'An Interstate FM live stream'),
+(null, null, 'DJ Zyron Live on ISFM 2014-10-18', '2014-10-18', 'An Interstate FM live stream');
 
 insert into listener_mix(listener_id, mix_id, last_listened)
 values (2, 2, '2017-06-04'),

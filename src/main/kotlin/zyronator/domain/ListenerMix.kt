@@ -21,7 +21,6 @@ data class ListenerMix(
         val discogsApiUrl : String,
         @Formula("(select m.discogs_web_url from mix m where m.id = mix_id)")
         val discogsWebUrl: String,
-        @Column(nullable = false)
         val lastListened: LocalDate,
         val comment: String)
 
