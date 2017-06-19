@@ -1,4 +1,4 @@
-Simple Spring Boot REST HATEOAS API written in Kotlin (except one Java file), for demonstration purposes.
+Simple Spring Boot REST HAL API written in Kotlin (except one Java file), for demonstration purposes.
 
 This application stores the dates when a listener last listened to [mixes by DJ Zyron](http://zyron.c64.org/mixes.php).  It also stores the URIs of [associated list data at Discogs](https://www.discogs.com/user/Zyron/lists?page=1&limit=100&header=1).
 
@@ -11,7 +11,7 @@ Restricted areas can be accessed using basic authentication:
 This repository demonstrates:
 
 * use of Spring Boot
-* implementation of a RESTful HATEOAS HAL API
+* implementation of a REST HAL API
 * hashing and authentication of passwords with BCrypt
 * restricting access to authenticated users (only GET requests on root URL and mixes subdirectory are permitted without authentication)
 * validation of input
