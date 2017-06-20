@@ -1,4 +1,4 @@
-Simple Spring Boot REST HAL API written in Kotlin (except one Java file), for demonstration purposes.
+Simple Spring Boot REST HAL API written in Kotlin (except one Java file), for demonstration purposes.  I am still working on this on a daily basis.
 
 This application stores the dates when a listener last listened to [mixes by DJ Zyron](http://zyron.c64.org/mixes.php).  It also stores the URIs of [associated list data at Discogs](https://www.discogs.com/user/Zyron/lists?page=1&limit=100&header=1).
 
