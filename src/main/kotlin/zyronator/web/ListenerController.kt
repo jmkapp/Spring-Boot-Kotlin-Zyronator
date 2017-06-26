@@ -21,6 +21,9 @@ open class ListenerController()
     @Autowired
     private lateinit var _listenerService : ListenerService
 
+    @Autowired
+    private lateinit var _mixController : MixController
+
     @PatchMapping("/{id}")
     fun updateListenerPassword(@PathVariable id : String, @RequestBody listener : Listener) : ResponseEntity<Listener>
     {
@@ -71,7 +74,7 @@ open class ListenerController()
     }
 
     @GetMapping("/{id}/lastListened")
-    fun findLastListened(@PathVariable id : String) : ResponseEntity<Map<String, ListenerMix?>>
+    fun findLastListened(@PathVariable id : String) : ResponseEntity<LastListenedMixes>
     {
         val authentication = SecurityContextHolder.getContext().authentication
         val user = authentication.principal as org.springframework.security.core.userdetails.User
@@ -88,8 +91,13 @@ open class ListenerController()
                 nextMix = null
             }
 
-            val map = mapOf("currentMix" to currentMix, "nextMix" to nextMix)
-            return ResponseEntity(map, HttpStatus.OK)
+            val currentMixDisplay = _mixController.getMixDisplay(currentMix)
+            val nextMixDisplay = _mixController.getMixDisplay(nextMix)
+
+            val lastListenedMixes = LastListenedMixes(currentMix = currentMixDisplay, nextMix = nextMixDisplay)
+            lastListenedMixes.add(linkTo(ListenerController::class.java, id).slash("/" + id).slash("/lastListened").withSelfRel())
+
+            return ResponseEntity(lastListenedMixes, HttpStatus.OK)
         }
         else
         {

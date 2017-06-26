@@ -3,6 +3,7 @@ package zyronator.domain
 import org.hibernate.annotations.Formula
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
+import org.springframework.hateoas.ResourceSupport
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -22,7 +23,7 @@ data class ListenerMix(
         @Formula("(select m.discogs_web_url from mix m where m.id = mix_id)")
         val discogsWebUrl: String,
         val lastListened: LocalDate,
-        val comment: String = "")
+        val comment: String = "") : ResourceSupport()
 
 //@RepositoryRestResource(collectionResourceRel = "listenermixes", path = "listenermixes")
 interface ListenerMixRepository : JpaRepository<ListenerMix, Long>

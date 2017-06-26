@@ -2,6 +2,7 @@ package zyronator.domain
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
+import org.springframework.hateoas.ResourceSupport
 import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
@@ -15,10 +16,10 @@ data class Mix(
         val id : Long,
         @Column(nullable = false)
         val title : String,
-        val recorded: LocalDate,
-        val comment: String,
-        val discogsApiUrl: String,
-        val discogsWebUrl: String)
+        val recorded: LocalDate?,
+        val comment: String?,
+        val discogsApiUrl: String?,
+        val discogsWebUrl: String?) : ResourceSupport()
 
 //@RepositoryRestResource(collectionResourceRel = "mixes", path = "mixes")
 interface MixRepository : JpaRepository<Mix, Long>
