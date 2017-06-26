@@ -10,7 +10,7 @@ import javax.persistence.*
 data class ListenerMix(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
-        val id: Long,
+        val id: Long?,
         @ManyToOne
         val listener: Listener,
         @ManyToOne
@@ -22,7 +22,7 @@ data class ListenerMix(
         @Formula("(select m.discogs_web_url from mix m where m.id = mix_id)")
         val discogsWebUrl: String,
         val lastListened: LocalDate,
-        val comment: String)
+        val comment: String = "")
 
 //@RepositoryRestResource(collectionResourceRel = "listenermixes", path = "listenermixes")
 interface ListenerMixRepository : JpaRepository<ListenerMix, Long>

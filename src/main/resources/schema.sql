@@ -2,14 +2,6 @@ DROP TABLE IF EXISTS listener_mix;
 DROP TABLE IF EXISTS listener;
 DROP TABLE IF EXISTS mix;
 
-CREATE TABLE `listener` (
-  `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `enabled` bool DEFAULT FALSE,
-  UNIQUE KEY uk_listener_name (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `mix` (
   `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `discogs_api_url` varchar(255) DEFAULT NULL,
@@ -17,6 +9,14 @@ CREATE TABLE `mix` (
   `title` varchar(255) NOT NULL,
   `recorded` date DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `listener` (
+  `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `enabled` bool DEFAULT FALSE,
+  UNIQUE KEY uk_listener_name (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `listener_mix` (

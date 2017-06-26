@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.sql.ResultSet;
 
 @Configuration
-//@EnableGlobalAuthentication
+@EnableGlobalAuthentication
 public class JdbcSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter
 {
     @Bean

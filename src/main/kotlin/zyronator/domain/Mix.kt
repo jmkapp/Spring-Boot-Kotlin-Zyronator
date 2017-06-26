@@ -29,6 +29,8 @@ interface MixRepository : JpaRepository<Mix, Long>
             @Param("title") title : String,
             @Param("discogsApiUrl") discogsApiUrl: String,
             @Param("discogsWebUrl") discogsWebUrl: String) : Mix
+    fun findTopByOrderByRecordedAsc() : Mix
+    fun findTopByOrderByRecordedDesc() : Mix
 }
 
 @Component("beforeCreateMixValidator")

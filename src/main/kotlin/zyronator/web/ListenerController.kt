@@ -12,7 +12,7 @@ import zyronator.service.ListenerService
 import org.apache.tomcat.jni.Lock.name
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
-
+import zyronator.domain.ListenerMix
 
 @RestController
 @RequestMapping("/listeners")
@@ -59,7 +59,7 @@ open class ListenerController()
 
         val listener = _listenerService.get(id.toLong())
 
-        if(user.authorities.contains(SimpleGrantedAuthority("ROLE_ADMIN")) || listener.name.equals(user.username))
+        if(user.authorities.contains(SimpleGrantedAuthority("ROLE_ADMIN")) || listener.name == user.username)
         {
             listener.add(linkTo(ListenerController::class.java, id).slash("/" + id).withSelfRel())
             return ResponseEntity<Listener>(listener, HttpStatus.OK)
@@ -67,6 +67,33 @@ open class ListenerController()
         else
         {
             return ResponseEntity<Listener>(null, HttpStatus.FORBIDDEN)
+        }
+    }
+
+    @GetMapping("/{id}/lastListened")
+    fun findLastListened(@PathVariable id : String) : ResponseEntity<Map<String, ListenerMix?>>
+    {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val user = authentication.principal as org.springframework.security.core.userdetails.User
+
+        val listener = _listenerService.get(id.toLong())
+
+        if(listener.name == user.username)
+        {
+            val currentMix : ListenerMix? = _listenerService.findLatestListenerMix(listener)
+            var nextMix : ListenerMix? = _listenerService.findEarliestListenerMix(listener)
+
+            if(currentMix?.id == nextMix?.id)
+            {
+                nextMix = null
+            }
+
+            val map = mapOf("currentMix" to currentMix, "nextMix" to nextMix)
+            return ResponseEntity(map, HttpStatus.OK)
+        }
+        else
+        {
+            return ResponseEntity(null, HttpStatus.FORBIDDEN)
         }
     }
 }
