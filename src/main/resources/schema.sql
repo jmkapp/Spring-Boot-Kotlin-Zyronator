@@ -22,7 +22,7 @@ CREATE TABLE `listener` (
 CREATE TABLE `listener_mix` (
   `id` bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `comment` varchar(255) DEFAULT NULL,
-  `last_listened` date DEFAULT NULL,
+  `last_listened_date` date DEFAULT NULL,
   `listener_id` bigint(20) NOT NULL,
   `mix_id` bigint(20) NOT NULL,
   FOREIGN KEY fk_listener_mix_listener_listener_id (`listener_id`)

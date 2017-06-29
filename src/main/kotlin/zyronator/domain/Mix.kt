@@ -42,7 +42,7 @@ class MixValidator : Validator
         val mix = target as Mix
 
         if (checkInputString(mix.title)) {
-            errors.rejectValue("title", "title.empty");
+            errors.rejectValue("mixTitle", "mixTitle.empty");
         }
     }
 

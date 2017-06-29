@@ -17,21 +17,21 @@ data class ListenerMix(
         @ManyToOne
         val mix: Mix,
         @Formula("(select m.title from mix m where m.id = mix_id)")
-        val mixTitle: String,
+        val mixTitle: String = "",
         @Formula("(select m.discogs_api_url from mix m where m.id = mix_id)")
-        val discogsApiUrl : String,
+        val discogsApiUrl : String? = "",
         @Formula("(select m.discogs_web_url from mix m where m.id = mix_id)")
-        val discogsWebUrl: String,
-        val lastListened: LocalDate,
-        val comment: String = "") : ResourceSupport()
+        val discogsWebUrl: String? = "",
+        var lastListenedDate: LocalDate? = null,
+        var comment: String? = "") : ResourceSupport()
 
 //@RepositoryRestResource(collectionResourceRel = "listenermixes", path = "listenermixes")
 interface ListenerMixRepository : JpaRepository<ListenerMix, Long>
 {
     fun findByListenerName(@Param("name") name: String) : List<ListenerMix>
-    fun findTopByListenerOrderByLastListenedDesc(@Param("listener") listener: Listener) : ListenerMix
-    fun findTopByListenerOrderByLastListenedAsc(@Param("listener") listener: Listener) : ListenerMix
-    fun findByMixAndListener(@Param("mix") mixUrl : Mix, @Param("listener") listenerUrl : Listener) : ListenerMix
+    fun findTopByListenerOrderByLastListenedDateDesc(@Param("listener") listener: Listener) : ListenerMix
+    fun findTopByListenerOrderByLastListenedDateAsc(@Param("listener") listener: Listener) : ListenerMix
+    fun findByMixAndListener(@Param("mix") mix : Mix, @Param("listener") listener : Listener) : ListenerMix
 
 //    @Query("SELECT mix1, mix2 ")
 //    fun testQuery(@Param("listener") listener: Listener) : List<ListenerMix>

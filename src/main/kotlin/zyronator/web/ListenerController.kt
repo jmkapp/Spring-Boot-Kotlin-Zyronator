@@ -3,15 +3,12 @@ package zyronator.web
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import zyronator.domain.Listener
 import zyronator.service.ListenerService
-import org.apache.tomcat.jni.Lock.name
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
-import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 import zyronator.domain.ListenerMix
 
 @RestController
@@ -22,7 +19,7 @@ open class ListenerController()
     private lateinit var _listenerService : ListenerService
 
     @Autowired
-    private lateinit var _mixController : MixController
+    private lateinit var _listenerMixController : ListenerMixController
 
     @PatchMapping("/{id}")
     fun updateListenerPassword(@PathVariable id : String, @RequestBody listener : Listener) : ResponseEntity<Listener>
@@ -91,11 +88,11 @@ open class ListenerController()
                 nextMix = null
             }
 
-            val currentMixDisplay = _mixController.getMixDisplay(currentMix)
-            val nextMixDisplay = _mixController.getMixDisplay(nextMix)
+            val currentMixDisplay = _listenerMixController.getListenerMixDisplay(currentMix)
+            val nextMixDisplay = _listenerMixController.getListenerMixDisplay(nextMix)
 
-            val lastListenedMixes = LastListenedMixes(currentMix = currentMixDisplay, nextMix = nextMixDisplay)
-            lastListenedMixes.add(linkTo(ListenerController::class.java, id).slash("/" + id).slash("/lastListened").withSelfRel())
+            val lastListenedMixes = LastListenedMixes(currentListenerMix = currentMixDisplay, nextListenerMix = nextMixDisplay)
+            lastListenedMixes.add(linkTo(ListenerController::class.java).slash(id).slash("/lastListenedDate").withSelfRel())
 
             return ResponseEntity(lastListenedMixes, HttpStatus.OK)
         }

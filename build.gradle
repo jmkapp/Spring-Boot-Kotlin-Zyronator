@@ -32,7 +32,7 @@ sourceSets {
 
 jar {
     baseName = 'codez8-springboot'
-    version = '0.2.8'
+    version = '0.2.93'
 }
 
 repositories {
