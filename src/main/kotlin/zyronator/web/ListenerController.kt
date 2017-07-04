@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import zyronator.domain.Listener
 import zyronator.service.ListenerService
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
-import zyronator.domain.ListenerMix
+import zyronator.service.ListenerMixService
 
 @RestController
 @RequestMapping("/listeners")
@@ -19,7 +19,7 @@ open class ListenerController()
     private lateinit var _listenerService : ListenerService
 
     @Autowired
-    private lateinit var _listenerMixController : ListenerMixController
+    private lateinit var _listenerMixService : ListenerMixService
 
     @PatchMapping("/{id}")
     fun updateListenerPassword(@PathVariable id : String, @RequestBody listener : Listener) : ResponseEntity<Listener>
@@ -71,7 +71,7 @@ open class ListenerController()
     }
 
     @GetMapping("/{id}/lastListened")
-    fun findLastListened(@PathVariable id : String) : ResponseEntity<LastListenedMixes>
+    fun findLastListenedMixes(@PathVariable id : String) : ResponseEntity<LastListenedMixes>
     {
         val authentication = SecurityContextHolder.getContext().authentication
         val user = authentication.principal as org.springframework.security.core.userdetails.User
@@ -80,19 +80,8 @@ open class ListenerController()
 
         if(listener.name == user.username)
         {
-            val currentMix : ListenerMix? = _listenerService.findLatestListenerMix(listener)
-            var nextMix : ListenerMix? = _listenerService.findEarliestListenerMix(listener)
-
-            if(currentMix?.id == nextMix?.id)
-            {
-                nextMix = null
-            }
-
-            val currentMixDisplay = _listenerMixController.getListenerMixDisplay(currentMix)
-            val nextMixDisplay = _listenerMixController.getListenerMixDisplay(nextMix)
-
-            val lastListenedMixes = LastListenedMixes(currentListenerMix = currentMixDisplay, nextListenerMix = nextMixDisplay)
-            lastListenedMixes.add(linkTo(ListenerController::class.java).slash(id).slash("/lastListenedDate").withSelfRel())
+            val lastListenedMixes = _listenerMixService.getLastListened(listener)
+            lastListenedMixes.add(linkTo(ListenerController::class.java).slash(id).slash("/lastListened").withSelfRel())
 
             return ResponseEntity(lastListenedMixes, HttpStatus.OK)
         }

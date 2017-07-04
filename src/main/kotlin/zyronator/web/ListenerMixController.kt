@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import zyronator.domain.ListenerMix
 import zyronator.service.ListenerMixService
 import zyronator.service.ListenerService
-import zyronator.web.display.ListenerMixDisplay
+import zyronator.service.ListenerMixDisplay
 import java.time.format.DateTimeFormatter
 
 @RestController

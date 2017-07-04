@@ -1,4 +1,4 @@
-package zyronator.web.display
+package zyronator.service
 
 import org.springframework.hateoas.ResourceSupport
 

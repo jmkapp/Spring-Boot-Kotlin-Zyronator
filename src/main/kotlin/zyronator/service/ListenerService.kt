@@ -40,14 +40,4 @@ class ListenerService
     {
         return _listenerRepository.findOne(id)
     }
-
-    fun findEarliestListenerMix(listener : Listener) : ListenerMix?
-    {
-        return _listenerMixService.findEarliest(listener)
-    }
-
-    fun findLatestListenerMix(listener : Listener) : ListenerMix?
-    {
-        return _listenerMixService.findLatest(listener)
-    }
 }
