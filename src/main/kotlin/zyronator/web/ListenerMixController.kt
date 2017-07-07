@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
+import zyronator.domain.Listener
 import zyronator.domain.ListenerMix
 import zyronator.service.ListenerMixService
 import zyronator.service.ListenerService
@@ -69,7 +70,18 @@ open class ListenerMixController
         }
     }
 
-    fun getListenerMixDisplay(listenerMix : ListenerMix?) : ListenerMixDisplay
+    fun getLastListened(listener : Listener) : LastListenedMixes
+    {
+        val currentListenerMix : ListenerMix? = _listenerMixService.getCurrentMix(listener)
+        val nextListenerMix = _listenerMixService.getNextMix(listener, currentListenerMix)
+
+        val currentListenerMixDisplay = getListenerMixDisplay(currentListenerMix)
+        val nextListenerMixDisplay = getListenerMixDisplay(nextListenerMix)
+
+        return LastListenedMixes(currentListenerMix = currentListenerMixDisplay, nextListenerMix = nextListenerMixDisplay)
+    }
+
+    private fun getListenerMixDisplay(listenerMix : ListenerMix?) : ListenerMixDisplay
     {
         if(listenerMix == null)
         {
@@ -79,17 +91,14 @@ open class ListenerMixController
         {
             val mix = listenerMix.mix
 
-            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-            val recordDate = if(mix.recorded == null) "" else mix.recorded.format(formatter)
-            val lastListenedDate = if(listenerMix.lastListenedDate == null) "" else listenerMix.lastListenedDate!!.format(formatter)
-
             val mixDisplay = ListenerMixDisplay(
                     mixTitle = mix.title,
-                    recordedDate = recordDate,
-                    comment = listenerMix.comment ?: "",
+                    recordedDate = if(mix.recorded == null) "" else mix.recorded.toString(),
+                    mixComment = mix.comment ?: "",
                     discogsApiUrl = mix.discogsApiUrl ?: "",
                     discogsWebUrl = mix.discogsWebUrl ?: "",
-                    lastListenedDate = lastListenedDate)
+                    lastListenedDate = if(listenerMix.lastListenedDate == null) "" else listenerMix.lastListenedDate.toString(),
+                    listenerMixComment = listenerMix.comment ?: "")
 
             mixDisplay.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(listenerMix.id).withSelfRel())
             mixDisplay.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(listenerMix.id).withRel("listenerMix"))

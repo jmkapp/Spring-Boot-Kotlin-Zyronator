@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*
 import zyronator.domain.Listener
 import zyronator.service.ListenerService
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
-import zyronator.service.ListenerMixService
 
 @RestController
 @RequestMapping("/listeners")
@@ -19,7 +18,7 @@ open class ListenerController()
     private lateinit var _listenerService : ListenerService
 
     @Autowired
-    private lateinit var _listenerMixService : ListenerMixService
+    private lateinit var _listenerMixController: ListenerMixController
 
     @PatchMapping("/{id}")
     fun updateListenerPassword(@PathVariable id : String, @RequestBody listener : Listener) : ResponseEntity<Listener>
@@ -80,8 +79,9 @@ open class ListenerController()
 
         if(listener.name == user.username)
         {
-            val lastListenedMixes = _listenerMixService.getLastListened(listener)
+            val lastListenedMixes = _listenerMixController.getLastListened(listener)
             lastListenedMixes.add(linkTo(ListenerController::class.java).slash(id).slash("/lastListened").withSelfRel())
+            lastListenedMixes.add(linkTo(ListenerController::class.java).slash(id).slash("/lastListened").withRel("lastListened"))
 
             return ResponseEntity(lastListenedMixes, HttpStatus.OK)
         }

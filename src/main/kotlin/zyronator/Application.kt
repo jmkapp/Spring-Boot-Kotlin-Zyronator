@@ -47,18 +47,4 @@ open class ValidationEventRegister : InitializingBean
                     }
         }
     }
-
-//    @Configuration
-//    @EnableAuthorizationServer
-//    @EnableResourceServer
-//    open class ResourceOAuthSecurityConfiguration : ResourceServerConfigurerAdapter()
-//    {
-//        override fun configure(http : HttpSecurity)
-//        {
-//            http.authorizeRequests()
-//                    .antMatchers("/").permitAll()
-//                    .antMatchers("/listeners/**").authenticated()
-//                    .antMatchers("/listenerMixes/**").authenticated()
-//        }
-//    }
 }

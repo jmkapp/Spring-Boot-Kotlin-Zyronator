@@ -53,55 +53,36 @@ class ListenerMixService
         }
     }
 
-    fun getLastListened(listener: Listener) : LastListenedMixes
+    fun getCurrentMix(listener : Listener) : ListenerMix?
     {
-        var currentListenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateAsc(listener)
-        var nextListenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateDesc(listener)
+        val currentListenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateDesc(listener)
 
-        if(currentListenerMix == null)
+        if(currentListenerMix?.lastListenedDate == null)
         {
-            currentListenerMix = findLatestGenerateRandom(listener)
+            return null
         }
 
-        if(nextListenerMix == null) {
+        return currentListenerMix.copy()
+    }
+
+    fun getNextMix(listener : Listener, currentListenerMix: ListenerMix?) : ListenerMix
+    {
+        var nextListenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateAsc(listener)
+
+        if(nextListenerMix == null || nextListenerMix.id == currentListenerMix?.id)
+        {
             do
             {
-                nextListenerMix = findEarliestGenerateRandom(listener = listener, exclude = currentListenerMix)
-            } while (currentListenerMix.mix.id == nextListenerMix?.mix?.id)
+                nextListenerMix = createRandom(listener)
+            } while (currentListenerMix?.mix?.id == nextListenerMix?.mix?.id)
         }
 
-        val currentListenerMixDisplay = getListenerMixDisplay(currentListenerMix)
-        val nextListenerMixDisplay = getListenerMixDisplay(nextListenerMix)
-
-        return LastListenedMixes(currentListenerMix = currentListenerMixDisplay, nextListenerMix = nextListenerMixDisplay)
-    }
-
-    private fun findEarliestGenerateRandom(listener : Listener, exclude : ListenerMix) : ListenerMix
-    {
-        val listenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateAsc(listener)
-
-        if(listenerMix == null || listenerMix.id == exclude.id)
+        if(nextListenerMix!!.id == null)
         {
-            return createRandom(listener)
+            nextListenerMix = _listenerMixRepository.saveAndFlush(nextListenerMix)
         }
-        else
-        {
-            return listenerMix
-        }
-    }
 
-    private fun findLatestGenerateRandom(listener : Listener) : ListenerMix
-    {
-        val listenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateDesc(listener)
-
-        if(listenerMix == null)
-        {
-            return createRandom(listener)
-        }
-        else
-        {
-            return listenerMix
-        }
+        return nextListenerMix!!.copy()
     }
 
     private fun createRandom(listener : Listener) : ListenerMix
@@ -112,40 +93,11 @@ class ListenerMixService
 
         if(retrievedListenerMix == null)
         {
-            val newListenerMix = ListenerMix(null, listener, mix)
-
-            val savedListenerMix = _listenerMixRepository.saveAndFlush(newListenerMix)
-
-            return savedListenerMix.copy()
+            return ListenerMix(null, listener, mix)
         }
         else
         {
             return retrievedListenerMix
-        }
-    }
-
-    private fun getListenerMixDisplay(listenerMix : ListenerMix?) : ListenerMixDisplay
-    {
-        if(listenerMix == null)
-        {
-            return ListenerMixDisplay()
-        }
-        else {
-            val mix = listenerMix.mix
-
-            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-            val recordDate = if (mix.recorded == null) "" else mix.recorded.format(formatter)
-            val lastListenedDate = if (listenerMix.lastListenedDate == null) "" else listenerMix.lastListenedDate!!.format(formatter)
-
-            val mixDisplay = ListenerMixDisplay(
-                    mixTitle = mix.title,
-                    recordedDate = recordDate,
-                    comment = listenerMix.comment ?: "",
-                    discogsApiUrl = mix.discogsApiUrl ?: "",
-                    discogsWebUrl = mix.discogsWebUrl ?: "",
-                    lastListenedDate = lastListenedDate)
-
-            return mixDisplay
         }
     }
 }
