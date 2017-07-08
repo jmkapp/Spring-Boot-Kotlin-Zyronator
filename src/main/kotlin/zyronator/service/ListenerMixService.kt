@@ -3,8 +3,6 @@ package zyronator.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import zyronator.domain.*
-import zyronator.web.LastListenedMixes
-import java.time.format.DateTimeFormatter
 
 @Service
 class ListenerMixService
@@ -20,9 +18,9 @@ class ListenerMixService
         return _listenerMixRepository.getOne(id)
     }
 
-    fun save(id : String, listenerMix : ListenerMix) : ListenerMix
+    fun update(id : Long, listenerMix : ListenerMix) : ListenerMix
     {
-        val retrieved = _listenerMixRepository.findOne(id.toLong())
+        val retrieved = _listenerMixRepository.findOne(id)
 
         retrieved.comment = listenerMix.comment
         retrieved.lastListenedDate = listenerMix.lastListenedDate

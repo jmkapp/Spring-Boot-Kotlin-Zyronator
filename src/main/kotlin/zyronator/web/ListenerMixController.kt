@@ -11,7 +11,6 @@ import zyronator.domain.ListenerMix
 import zyronator.service.ListenerMixService
 import zyronator.service.ListenerService
 import zyronator.service.ListenerMixDisplay
-import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/listenerMixes")
@@ -49,7 +48,7 @@ open class ListenerMixController
     }
 
     @PatchMapping("/{id}")
-    fun update(@PathVariable id : String, @RequestBody listenerMix: ListenerMix) : ResponseEntity<ListenerMixDisplay>
+    fun update(@PathVariable id : String, @RequestBody listenerMix: ListenerMix) : ResponseEntity<LastListenedMixes>
     {
         val authentication = SecurityContextHolder.getContext().authentication
         val user = authentication.principal as org.springframework.security.core.userdetails.User
@@ -58,11 +57,15 @@ open class ListenerMixController
 
         if(retrieved.listener.name == user.username)
         {
-            val newListenerMix = _listenerMixService.save(id, listenerMix)
+            val newListenerMix = _listenerMixService.update(id.toLong(), listenerMix)
+            val nextListenerMix = _listenerMixService.getNextMix(retrieved.listener, newListenerMix)
 
             val listenerMixDisplay = getListenerMixDisplay(newListenerMix)
+            val nextListenerMixDisplay = getListenerMixDisplay(nextListenerMix)
 
-            return ResponseEntity(listenerMixDisplay, HttpStatus.OK)
+            val listenerMixes = LastListenedMixes(currentListenerMix = listenerMixDisplay, nextListenerMix = nextListenerMixDisplay)
+
+            return ResponseEntity(listenerMixes, HttpStatus.OK)
         }
         else
         {
