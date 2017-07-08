@@ -21,4 +21,9 @@ class MixService
 
         return mixPage.content.get(0)
     }
+
+    fun findAll() : List<Mix>
+    {
+        return _mixRepository.findAll()
+    }
 }

@@ -1,6 +1,7 @@
 package zyronator.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import zyronator.domain.*
 
@@ -65,37 +66,30 @@ class ListenerMixService
 
     fun getNextMix(listener : Listener, currentListenerMix: ListenerMix?) : ListenerMix
     {
-        var nextListenerMix : ListenerMix? = _listenerMixRepository.findTopByListenerOrderByLastListenedDateAsc(listener)
+        val allMixes = _mixService.findAll()
+        val allListenerMixes = _listenerMixRepository.findByListener(listener)
 
-        if(nextListenerMix == null || nextListenerMix.id == currentListenerMix?.id)
+        val nextMixSelector = NextMixSelector(allMixes, allListenerMixes)
+
+        var nextMix : Mix
+
+        if(currentListenerMix == null)
         {
-            do
-            {
-                nextListenerMix = createRandom(listener)
-            } while (currentListenerMix?.mix?.id == nextListenerMix?.mix?.id)
+            nextMix = nextMixSelector.selectMix()
+        }
+        else
+        {
+            nextMix = nextMixSelector.selectMix(currentListenerMix.mix)
         }
 
-        if(nextListenerMix!!.id == null)
+        var nextListenerMix : ListenerMix? = _listenerMixRepository.findByMixAndListener(nextMix, listener)
+
+        if(nextListenerMix == null)
         {
+            nextListenerMix = ListenerMix(id = null, mix = nextMix, listener = listener)
             nextListenerMix = _listenerMixRepository.saveAndFlush(nextListenerMix)
         }
 
         return nextListenerMix!!.copy()
-    }
-
-    private fun createRandom(listener : Listener) : ListenerMix
-    {
-        val mix = _mixService.random()
-
-        val retrievedListenerMix : ListenerMix? = _listenerMixRepository.findByMixAndListener(mix, listener)
-
-        if(retrievedListenerMix == null)
-        {
-            return ListenerMix(null, listener, mix)
-        }
-        else
-        {
-            return retrievedListenerMix
-        }
     }
 }

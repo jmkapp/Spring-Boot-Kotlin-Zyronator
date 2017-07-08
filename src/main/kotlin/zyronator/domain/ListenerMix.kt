@@ -28,6 +28,7 @@ data class ListenerMix(
 //@RepositoryRestResource(collectionResourceRel = "listenermixes", path = "listenermixes")
 interface ListenerMixRepository : JpaRepository<ListenerMix, Long>
 {
+    fun findByListener(@Param("listener") listener : Listener) : List<ListenerMix>
     fun findByListenerName(@Param("name") name: String) : List<ListenerMix>
     fun findTopByListenerOrderByLastListenedDateDesc(@Param("listener") listener: Listener) : ListenerMix
     fun findTopByListenerOrderByLastListenedDateAsc(@Param("listener") listener: Listener) : ListenerMix
