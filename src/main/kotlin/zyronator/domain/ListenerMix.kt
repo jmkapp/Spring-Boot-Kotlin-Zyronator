@@ -23,7 +23,7 @@ data class ListenerMix(
         @Formula("(select m.discogs_web_url from mix m where m.id = mix_id)")
         val discogsWebUrl: String? = "",
         var lastListenedDate: LocalDate? = null,
-        var comment: String? = "") : ResourceSupport()
+        var comment: String? = "")
 
 //@RepositoryRestResource(collectionResourceRel = "listenermixes", path = "listenermixes")
 interface ListenerMixRepository : JpaRepository<ListenerMix, Long>

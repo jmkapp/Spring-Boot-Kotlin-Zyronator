@@ -23,7 +23,7 @@ open class ListenerMixController
     private lateinit var _listenerMixService : ListenerMixService
 
     @PostMapping
-    fun createListenerMix(@RequestBody listenerMix : ListenerMix) : ResponseEntity<ListenerMix>
+    fun createListenerMix(@RequestBody listenerMix : ListenerMix) : ResponseEntity<ListenerMixDisplay>
     {
         val authentication = SecurityContextHolder.getContext().authentication
         val user = authentication.principal as org.springframework.security.core.userdetails.User
@@ -34,12 +34,9 @@ open class ListenerMixController
         if(listener.name == user.username)
         {
             val newListenerMix = _listenerMixService.findOrCreate(listenerMix)
-            newListenerMix.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(newListenerMix.id).withSelfRel())
-            newListenerMix.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(newListenerMix.id).withRel("listenerMix"))
-            newListenerMix.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(newListenerMix.id).slash("listener").withRel("listener"))
-            newListenerMix.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(newListenerMix.id).slash("mix").withRel("mix"))
+            val listenerMixDisplay = getListenerMixDisplay(newListenerMix)
 
-            return ResponseEntity(newListenerMix, HttpStatus.OK)
+            return ResponseEntity(listenerMixDisplay, HttpStatus.OK)
         }
         else
         {
