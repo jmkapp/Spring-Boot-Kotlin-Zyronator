@@ -40,4 +40,9 @@ class ListenerService
     {
         return _listenerRepository.findOne(id)
     }
+
+    fun findByName(name : String) : Listener
+    {
+        return _listenerRepository.findByName(name)
+    }
 }

@@ -39,10 +39,7 @@ class ListenerMixService
         if(retrievedListenerMix == null)
         {
             val newListenerMix = _listenerMixRepository.saveAndFlush(listenerMix)
-            val returnListenerMix = newListenerMix.copy(
-                    mixTitle = newListenerMix.mix.title,
-                    discogsApiUrl = newListenerMix.mix.discogsApiUrl ?: "",
-                    discogsWebUrl = newListenerMix.mix.discogsWebUrl ?: "")
+            val returnListenerMix = newListenerMix.copy()
             return returnListenerMix
         }
         else

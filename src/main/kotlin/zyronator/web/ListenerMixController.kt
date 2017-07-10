@@ -10,7 +10,6 @@ import zyronator.domain.Listener
 import zyronator.domain.ListenerMix
 import zyronator.service.ListenerMixService
 import zyronator.service.ListenerService
-import zyronator.service.ListenerMixDisplay
 
 @RestController
 @RequestMapping("/listenerMixes")
@@ -93,11 +92,11 @@ open class ListenerMixController
 
             val mixDisplay = ListenerMixDisplay(
                     mixTitle = mix.title,
-                    recordedDate = if(mix.recorded == null) "" else mix.recorded.toString(),
+                    recordedDate = if (mix.recorded == null) "" else mix.recorded.toString(),
                     mixComment = mix.comment ?: "",
                     discogsApiUrl = mix.discogsApiUrl ?: "",
                     discogsWebUrl = mix.discogsWebUrl ?: "",
-                    lastListenedDate = if(listenerMix.lastListenedDate == null) "" else listenerMix.lastListenedDate.toString(),
+                    lastListenedDate = if (listenerMix.lastListenedDate == null) "" else listenerMix.lastListenedDate.toString(),
                     listenerMixComment = listenerMix.comment ?: "")
 
             mixDisplay.add(ControllerLinkBuilder.linkTo(ListenerMixController::class.java).slash(listenerMix.id).withSelfRel())

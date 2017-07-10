@@ -18,7 +18,7 @@ data class Listener(
         val name : String,
         @Column(nullable = false)
         val password : String,
-        val enabled : Boolean = false) : ResourceSupport()
+        val enabled : Boolean = false)
 
 //@RepositoryRestResource(collectionResourceRel = "listeners", path = "listeners")
 interface ListenerRepository : JpaRepository<Listener, Long>

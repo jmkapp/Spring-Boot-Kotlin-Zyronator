@@ -37,12 +37,13 @@ open class ListenerController()
     }
 
     @PostMapping
-    fun createListener(@RequestBody listener : Listener) : ResponseEntity<Listener>
+    fun createListener(@RequestBody listener : Listener) : ResponseEntity<ListenerDisplay>
     {
         if(!listener.name.isNullOrEmpty() && !listener.password.isNullOrEmpty())
         {
             val newListener = _listenerService.create(listener)
-            return ResponseEntity.status(HttpStatus.OK).body(newListener)
+            val listenerDisplay = ListenerDisplay(newListener.name)
+            return ResponseEntity.status(HttpStatus.OK).body(listenerDisplay)
         }
         else
         {
@@ -51,7 +52,7 @@ open class ListenerController()
     }
 
     @GetMapping("/{id}")
-    fun getListener(@PathVariable id : String): ResponseEntity<Listener>
+    fun getListener(@PathVariable id : String): ResponseEntity<ListenerDisplay>
     {
         val authentication = SecurityContextHolder.getContext().authentication
         val user = authentication.principal as org.springframework.security.core.userdetails.User
@@ -60,13 +61,29 @@ open class ListenerController()
 
         if(user.authorities.contains(SimpleGrantedAuthority("ROLE_ADMIN")) || listener.name == user.username)
         {
-            listener.add(linkTo(ListenerController::class.java, id).slash("/" + id).withSelfRel())
-            return ResponseEntity<Listener>(listener, HttpStatus.OK)
+            val listenerDisplay = ListenerDisplay(listener.name)
+            listenerDisplay.add(linkTo(ListenerController::class.java).slash(listener.id).withSelfRel())
+            listenerDisplay.add(linkTo(ListenerController::class.java).slash(listener.id).withRel("listener"))
+            listenerDisplay.add(linkTo(ListenerController::class.java).slash(listener.id).slash("lastListened").withRel("lastListened"))
+            return ResponseEntity<ListenerDisplay>(listenerDisplay, HttpStatus.OK)
         }
         else
         {
-            return ResponseEntity<Listener>(null, HttpStatus.FORBIDDEN)
+            return ResponseEntity<ListenerDisplay>(null, HttpStatus.FORBIDDEN)
         }
+    }
+
+    @GetMapping("/search/findByName")
+    fun findByName(@RequestParam("name") name : String) : ResponseEntity<ListenerDisplay>
+    {
+        val listener = _listenerService.findByName(name)
+
+        val listenerDisplay = ListenerDisplay(name)
+
+        listenerDisplay.add(linkTo(ListenerController::class.java).slash(listener.id).withSelfRel())
+        listenerDisplay.add(linkTo(ListenerController::class.java).slash(listener.id).withRel("listener"))
+        listenerDisplay.add(linkTo(ListenerController::class.java).slash(listener.id).slash("lastListened").withRel("lastListened"))
+        return ResponseEntity<ListenerDisplay>(listenerDisplay, HttpStatus.OK)
     }
 
     @GetMapping("/{id}/lastListened")
