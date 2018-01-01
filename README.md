@@ -4,8 +4,6 @@ This application stores the dates when a listener last listened to [mixes by DJ 
 
 This is a companion project to the [Android Zyronator](https://github.com/jmkapp/Android-Kotlin-Zyronator), which uses this API to store and retrieve listener/mix data.
 
-This API is [live at Amazon Web Services](http://jsbr.us-west-2.elasticbeanstalk.com).  Most areas are restricted to authenticated users only.
-
 Restricted areas can be accessed using basic authentication:
 * username: guest
 * password: guest
